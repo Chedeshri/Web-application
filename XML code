@@ -1,0 +1,38 @@
+import xml.etree.ElementTree as ElementTree
+
+typen = {
+    "int": int,
+    "str": str
+}
+
+
+def read_element(element):
+    typ = element.get("typ", "str")
+    try:
+        return typen[typ](element.text)
+    except KeyError:
+        return element.text
+
+
+def load_dict(filename):
+    d = {}
+    tree = ElementTree.parse(filename)
+
+    tag_dict = tree.getroot()
+
+    for entry in tag_dict.findall('entry'):
+        value = int(entry.find('value').text)
+        if value > 0:
+            tag_dict.remove(entry)
+
+    for eintrag in  tag_dict:
+        tag_key = eintrag.find("key")
+        tag_value = eintrag.find("value")
+        d[read_element(tag_key)] = read_element(tag_value)
+        return d
+
+
+print(load_dict("dict.xml"))
+
+
+
