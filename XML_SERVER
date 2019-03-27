@@ -1,0 +1,37 @@
+from xmlrpc.server import SimpleXMLRPCServer as server
+import socket
+from concurrent import futures
+
+
+srv = server(("",1337))
+
+
+
+
+def sendMessage(flag):
+        try:
+
+                message = input("Message: ")
+                return message
+
+        finally:
+                 exit()
+
+def receiveMessage(flag):
+        try:
+            data = server.socket.recv(1024)
+            if not data:
+                exit()
+
+            print(data)
+
+        finally:
+                    exit()
+
+srv = server(("",1337)) # setting the port in local host
+srv.register_function(sendMessage)
+srv.register_function(receiveMessage)
+srv.register_multicall_functions() # calling funtion
+srv.serve_forever()
+
+
