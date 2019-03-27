@@ -1,0 +1,48 @@
+import socket
+from concurrent import futures
+
+ip = input("IP-Address: ")
+
+
+def checksocket(flag):
+    try:
+        while flag:
+            s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+            s.connect((ip, 60000))
+
+    except:
+        print("The error is : ")
+
+
+
+s1= socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+s1.bind(("", 60004))
+s1.listen(5)
+
+
+def sendMessage(flag):
+    try:
+        while flag:
+            message = input("Message: ")
+            s.send(message.encode())
+
+    finally:
+            s.close()
+
+def receiveMessage(flag):
+    try:
+        while flag:
+            com, addr = s1.accept()
+            while flag:
+                data = com.recv(1024)
+                if not data:
+                    com.close()
+                    break
+                print("[{}] {}".format(addr[0], data.decode()))
+
+    finally:
+        s1.close()
+
+with futures.ThreadPoolExecutor(max_workers=8) as e:
+    e.submit(sendMessage, True)
+    e.submit(receiveMessage, True)
